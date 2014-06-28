@@ -32,6 +32,10 @@ The view will receive a JSON formatted string from the Eris middlewear after the
 }
 ```
 
+###  Notes
+
+When indicating to the datamodel a storage location it is required to use the '0x' prefix. If you do not, then c3d will build the storage address according to a hex construction of the string. So if you indicate '0x19' then c3d will check the `0x19` slot. If you indicate '19' then c3d will check the `0x3139000000000000000000000000000000000000000000000000000000000000` slot (which is the hex construction of the string which includes '1' and '9').
+
 ## View Data
 
 Data fields are given a name which will be matched by c3d in order to assemble the view files from mustang templates in which they reside in their raw form. These data fields can be anything which are allowed by the smart contract and need not be confined to the view data which are provided by the Eris platform out of the box.
