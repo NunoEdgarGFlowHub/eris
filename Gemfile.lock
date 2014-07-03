@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/project-douglas/c3d.git
-  revision: 93282793dc666c630b94882d8af9b5c62db3cf0a
+  revision: 8430466c7e84213820e7ebf0d4a1d904a990ad8c
   specs:
-    c3d (0.5.6)
+    c3d (0.5.7)
       bencode (~> 0.8)
       celluloid (~> 0.15)
       commander (~> 4.1)

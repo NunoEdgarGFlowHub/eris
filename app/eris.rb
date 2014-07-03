@@ -36,8 +36,6 @@ get '/view/:contract' do
   @lineage       = find_the_peak @this_contract
   @type          = contract_type @this_contract, @contents, @lineage
   assemble_content_votes
-  p @upvotes
-  p @downvotes
   haml :display_tree
 end
 
