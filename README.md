@@ -59,14 +59,12 @@ Then follow the post install instructions below.
 
 Install [Docker](https://docker.io) from their docs for [Ubuntu](https://docs.docker.com/installation/ubuntulinux/) and [OS X](https://docs.docker.com/installation/mac/).
 
-You can use pre-built images from the [Docker Hub](https://hub.docker.com/):
-
 OSX users should run following script before running eris project
 ```
 curl -O https://raw.githubusercontent.com/project-douglas/eris/master/osx-port-forward.sh && bash osx-port-forward.sh
 ```
 
-
+You can use pre-built images from the [Docker Hub](https://hub.docker.com/):
 ```
 docker pull caktux/eris
 docker run -i -p 5000:5000 -p 30302:30302 -t caktux/eris
