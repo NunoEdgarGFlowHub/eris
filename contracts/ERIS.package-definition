@@ -104,6 +104,10 @@ modify-deploy:
   Bylaws/SetPerms.lll => {{BLWSetPerms}}
   (def 'DOUG 0x9c0182658c9d57928b06d3ee20bb2b619a9cbf7b) => (def 'DOUG {{DOUG}})
 
+# Endow Member Registration
+endow:
+  {{BLWReg}} => 10000000000
+
 # Now. We must register Everything
 transact:
   {{DOUG}} => register rep {{rep}}

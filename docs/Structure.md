@@ -37,7 +37,8 @@ Similarly `BB` contracts are mirrors of `BA` contracts and the c3D system will s
 * 0x15 : (K)    : Owner of this c3D contract
 * 0x16 : (C)    : Creator of this c3D contract
 * 0x17 : (V)    : TimeStamp this c3D contract was created
-* 0x18 : (A)    : Linked list start
+* 0x18 : (I)    : Behaviour slot
+* 0x19 : (A)    : Linked list start
 
 #### Helpful Compatibility Definitions for Top Level Storage (primarily used by DOUGs ByLaws)
 
@@ -93,6 +94,7 @@ Similarly `BB` contracts are mirrors of `BA` contracts and the c3D system will s
 * 0x15 : (K)    : Owner
 * 0x16 : (C)    : Creator
 * 0x17 : (V)    : TimeStamp
+* 0x18 : (I)    : Behaviour
 
 #### Helpful Compatibility Definitions for Top Level Storage (primarily used by DOUGs ByLaws)
 
