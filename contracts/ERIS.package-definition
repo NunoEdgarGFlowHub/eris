@@ -175,13 +175,24 @@ transact:
 transact:
   {{Swarum}} => init '' '' '' {{DOUG}}
 transact:
+  {{Swarum}} => setparent {{DOUG}}
+transact:
   {{Blacklist}} => init '' '' '' {{DOUG}}
+transact:
+  {{Blacklist}} => setparent {{DOUG}}
 transact:
   {{flaggedlist}} => init '' '' '' {{DOUG}}
 transact:
+  {{flaggedlist}} => setparent {{DOUG}}
+transact:
   {{promotedList}} => init '' '' '' {{DOUG}}
 transact:
+  {{promotedList}} => setparent {{DOUG}}
+transact:
   {{flashnoticeList}} => init '' '' '' {{DOUG}}
+transact:
+  {{flashnoticeList}} => setparent {{DOUG}}
+
 
 # Next we set permissions for the Bylaws.
 transact:
