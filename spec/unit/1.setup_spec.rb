@@ -13,9 +13,6 @@ describe "Setting Up c3D" do
       expect(ENV['TORRENT_RPC']).to be
       expect(ENV['TORRENT_USER']).to be
       expect(ENV['TORRENT_PASS']).to be
-      expect(ENV['UI_RESPOND']).to be
-      expect(ENV['UI_ANNOUNCE']).to be
-      expect(ENV['ETH_CONNECTOR']).to be
       expect(ENV['ETH_HOST']).to be
       expect(ENV['ETH_PORT']).to be
       expect(ENV['ETH_KEY']).to be
