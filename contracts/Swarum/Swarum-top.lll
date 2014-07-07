@@ -101,7 +101,7 @@
 		(when (= (cmd) "setparent")
 			{
 				(unless (CHECKBYLAW) (STOP))
-				[[parent]](parentaddr)
+				[[BAparent]](parentaddr)
 				(STOP)
 			}
 		)
