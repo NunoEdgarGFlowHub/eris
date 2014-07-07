@@ -5,13 +5,13 @@
 
 	(def 'name () (calldataload 0x0))
 
-	(return 0 (lll 
+	(return 0 (lll
 		{
 			[0x0]"APcheck"
 			[0x20](caller)
 			(call (gass) DOUG 0 0x0 0x40 0x40 0x20)
 
-			(unless (= @0x40 BTM) (= @0x40 XORD) (= @0x40 ORD) (STOP))
+			(unless (|| (= @0x40 BTM) (= @0x40 XORD) (= @0x40 ORD)) (STOP))
 
 			[0x0]"addperm"
 			[0x20](name)
