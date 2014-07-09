@@ -1,12 +1,18 @@
-GEM
-  remote: https://rubygems.org/
+GIT
+  remote: https://github.com/project-douglas/c3d.git
+  revision: c6d7dc387b4aef511af058448102901952f7afb9
   specs:
-    bencode (0.8.1)
-    c3d (0.4.16)
+    c3d (0.5.7)
       bencode (~> 0.8)
       celluloid (~> 0.15)
       commander (~> 4.1)
       httparty (~> 0.13)
+      timers (~> 1.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    bencode (0.8.1)
     celluloid (0.15.2)
       timers (~> 1.1.0)
     commander (4.1.6)
@@ -15,7 +21,7 @@ GEM
     dotenv (0.11.1)
       dotenv-deployment (~> 0.0.2)
     dotenv-deployment (0.0.2)
-    epm (0.3.8)
+    epm (0.3.17)
       commander (~> 4.1.6)
     foreman (0.74.0)
       dotenv (~> 0.11.1)
@@ -63,7 +69,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  c3d
+  c3d!
   epm
   foreman
   haml

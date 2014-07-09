@@ -14,7 +14,11 @@ helpers do
       tmp = []
       until contract.empty?
         c = contract.shift
-        c = c[2..-1] if c[0..1] == '0x'
+        if c.class == String
+          c = c[2..-1] if c[0..1] == '0x'
+        else
+          c = '0x'
+        end
         tmp.push c
       end
       contract = tmp
@@ -87,40 +91,59 @@ helpers do
     return Celluloid::Actor[:eth].get_storage_at this_contract, '0x20'
   end
 
+  def get_watched_contracts
+    watch_file = ENV['WATCH_FILE']
+    begin
+      watched = JSON.parse(File.read(watch_file))
+    rescue
+      watched = []
+    end
+  end
+
+  def get_ignored_contracts
+    ignore_file = ENV['IGNORE_FILE']
+    begin
+      ignored = JSON.parse(File.read(ignore_file))
+    rescue
+      watched = []
+    end
+  end
+
   def update_settings params
     epm_settings_file = File.join(ENV['HOME'], '.epm', 'epm-rpc.json')
     c3d_settings_file = File.join(ENV['HOME'], '.epm', 'c3d-config.json')
     @epm_settings = JSON.parse(File.read(epm_settings_file))
     if @epm_settings && params[:epmAndC3d] && params[:epmAndC3d] == "on"
-      @epm_settings['path-to-eth'] = params[:pathtoEth]
-      @epm_settings['json-port'] = params[:ethRPCPort]
-      @epm_settings['remote'] = params[:ethPeerServer]
-      @epm_settings['eth-listen-port'] = params[:ethPeerPort]
-      @epm_settings['directory'] = params[:blockchainDir]
-      @epm_settings['address-public-key'] = address_guard params[:primaryAccountPub]
+      @epm_settings['path-to-eth']         = params[:pathtoEth]
+      @epm_settings['json-port']           = params[:ethRPCPort]
+      @epm_settings['remote']              = params[:ethPeerServer]
+      @epm_settings['eth-listen-port']     = params[:ethPeerPort]
+      @epm_settings['directory']           = params[:blockchainDir]
+      @epm_settings['address-public-key']  = address_guard params[:primaryAccountPub]
       @epm_settings['address-private-key'] = address_guard params[:primaryAccountPriv]
     end
     @c3d_settings = JSON.parse(File.read(c3d_settings_file))
     if @c3d_settings
-      @c3d_settings['swarm_dir'] = params[:swarmDir]
-      @c3d_settings['path-to-eth'] = params[:pathtoEth]
-      @c3d_settings['eth_rpc_port'] = params[:ethRPCPort]
-      @c3d_settings['eth_remote'] = params[:ethPeerServer]
-      @c3d_settings['eth_peer_port'] = params[:ethPeerPort]
-      @c3d_settings['blockchain_dir'] = params[:blockchainDir]
-      @c3d_settings['primary_account'] = address_guard params[:primaryAccountPub]
-      @c3d_settings['primary_account_key'] = address_guard params[:primaryAccountPriv]
-      @c3d_settings['torrents_dir'] = params[:torrentsDir]
-      @c3d_settings['blobs_dir'] = params[:blobsDir]
-      @c3d_settings['watch_file'] = params[:watchFile]
-      @c3d_settings['ignore_file'] = params[:ignoreFile]
-      @c3d_settings['torrent_rpc'] = params[:torrentRPCadd]
-      @c3d_settings['torrent_user'] = params[:torrentUserName]
-      @c3d_settings['torrent_pass'] = params[:torrentPassword]
-      @c3d_settings['path-to-lllc'] = params[:pathtoLLLC]
-      @c3d_settings['download_dir'] = params[:downloadingDir]
-      @c3d_settings['download-queue-size'] = params[:downloadQueueSize]
+      @c3d_settings['swarm_dir']             = params[:swarmDir]
+      @c3d_settings['path-to-eth']           = params[:pathtoEth]
+      @c3d_settings['eth_rpc_port']          = params[:ethRPCPort]
+      @c3d_settings['eth_remote']            = params[:ethPeerServer]
+      @c3d_settings['eth_peer_port']         = params[:ethPeerPort]
+      @c3d_settings['blockchain_dir']        = params[:blockchainDir]
+      @c3d_settings['primary_account']       = address_guard params[:primaryAccountPub]
+      @c3d_settings['primary_account_key']   = address_guard params[:primaryAccountPriv]
+      @c3d_settings['torrents_dir']          = params[:torrentsDir]
+      @c3d_settings['blobs_dir']             = params[:blobsDir]
+      @c3d_settings['watch_file']            = params[:watchFile]
+      @c3d_settings['ignore_file']           = params[:ignoreFile]
+      @c3d_settings['torrent_rpc']           = params[:torrentRPCadd]
+      @c3d_settings['torrent_user']          = params[:torrentUserName]
+      @c3d_settings['torrent_pass']          = params[:torrentPassword]
+      @c3d_settings['path-to-lllc']          = params[:pathtoLLLC]
+      @c3d_settings['download_dir']          = params[:downloadingDir]
+      @c3d_settings['download-queue-size']   = params[:downloadQueueSize]
       @c3d_settings['queue-stalled-minutes'] = params[:queueStallMins]
+      @c3d_settings['gas_price']             = params[:gasPrice]
     end
     File.open(epm_settings_file, 'w'){|f| f.write(JSON.pretty_generate(@epm_settings))}
     File.open(c3d_settings_file, 'w'){|f| f.write(JSON.pretty_generate(@c3d_settings))}
@@ -137,6 +160,29 @@ helpers do
         url:      ENV['TORRENT_RPC'] }
     C3D::ConnectEth.supervise_as :eth, :cpp
     C3D::Utility.save_key
+    $key = Celluloid::Actor[:eth].get_key
+  end
+
+  def stop_eth
+    Celluloid::Actor[:eth].terminate
+    sleep 1
+    if C3D::EthRunner.is_eth_running?
+      eth = C3D::EthRunner.eth_process
+      spawn "kill #{eth}"
+    end
+  end
+
+  def kank_chain
+    chain = ENV['BLOCKCHAIN_DIR']
+    chain.gsub!('~', ENV['HOME']) if chain[/~/]
+    FileUtils.rm_rf chain
+  end
+
+  def start_eth
+    print "This will take a few seconds. Please be patient.\n"
+    settings = C3D::Utility.get_config
+    C3D::EthRunner.start_ethereum settings
+    C3D::ConnectEth.supervise_as :eth, :cpp
     $key = Celluloid::Actor[:eth].get_key
   end
 

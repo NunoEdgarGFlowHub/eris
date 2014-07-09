@@ -6,9 +6,9 @@
       %a{href:"../view/#{contr}"}= contr[0..8]
   %li.active= address_unguard @this_contract.downcase
 
+- i = 0
 - @contents.each do |group|
   .row
-    - i = 0
     - group.each do |contr, conte|
       - if @type == 0 or @type == 1
         #cit-actions.col-md-1
@@ -18,7 +18,6 @@
           %form.pull-left{ action:"../view/#{contr}/downvote", method: 'post'}
             %button.btn.btn-default.glyphicon.glyphicon-arrow-down{type:'submit', value: ''}
           %p.vote-pad.pull-left= @downvotes[i]
-        -# #cit-votes.col-md-1
 
       #content.col-md-8
         - if @type != 0
@@ -26,10 +25,17 @@
             %a{href:"../view/#{contr}"}= address_unguard contr
         %p= conte
 
-      #mod-actions.col-md-offset-1.col-md-1
-        - if @moderate_this == nil
+      #mod-actions.pull-right
+        - if @moderate_this == nil && ( @type == 0 || @type == 1 )
           %form{ action:"../moderate/#{contr}/flag", method: 'post'}
             %input.button.btn.btn-warning{type:'submit', value: 'Flag This'}
+        - else
+          - if @watched.include? contr
+            %form{ action:"../view/#{contr}/unsubscribe", method: 'post'}
+              %input.button.btn.btn-info{type:'submit', value: 'Unsubscribe to This'}
+          - else
+            %form{ action:"../view/#{contr}/subscribe", method: 'post'}
+              %input.button.btn.btn-info{type:'submit', value: 'Subscribe to This'}
 
         - if @moderate_this == 'flaggedlist'
           %form{ action:"../moderate/#{contr}/promote", method: 'post'}
@@ -42,25 +48,35 @@
             %input.button.btn.btn-danger{type:'submit', value: 'Blacklist This'}
           %form{ action:"../moderate/#{contr}/remove_promotion", method: 'post'}
             %input.button.btn.btn-info{type:'submit', value: 'Remove Flag'}
-      - i += 1
+  - i += 1
 
 .row
   #newcontent.clearfix.col-md-6.col-md-offset-3
-    - if @type == 1
-      %form.form.form-horizontal{ role: 'form', action:"/view/#{@this_contract}/new_post", method: 'post'}
-        .form-group
-          %label{ for: 'newPost' } Respond
-          %textarea.form-control{ rows: 13, id: 'newPost', name: 'content'}
-        %input.button.btn.btn-primary{type:'submit', value: 'Submit Post'}
-    - elsif @type == 2
-      %form.form.form-horizontal{ role: 'form', action:"/view/#{@this_contract}/new_thread", method: 'post'}
-        .form-group
-          %label{ for: 'newThread' } New Thread
-          %textarea.form-control{ rows: 13, id: 'newThread', name: 'content'}
-        %input.button.btn.btn-primary{type:'submit', value: 'Submit Thread'}
-    - elsif @type == 3
-      %form.form.form-horizontal{ role: 'form', action:"/view/#{@this_contract}/new_topic", method: 'post'}
-        .form-group
-          %label{ for: 'newTopic' } New Topic
-          %textarea.form-control{ rows: 1, id: 'newTopic', name: 'content'}
-        %input.button.btn.btn-primary{type:'submit', value: 'Submit Topic'}
+    - unless @moderate_this
+      - if @type == 1
+        %form.form.form-horizontal{ role: 'form', action:"/view/#{@this_contract}/new_post", method: 'post'}
+          .form-group
+            %label{ for: 'newPost' } Respond
+            %textarea.form-control{ rows: 13, id: 'newPost', name: 'content'}
+          %input.button.btn.btn-primary{type:'submit', value: 'Submit Post'}
+      - elsif @type == 2
+        %form.form.form-horizontal{ role: 'form', action:"/view/#{@this_contract}/new_thread", method: 'post'}
+          .form-group
+            %label{ for: 'newThread' } New Thread
+            %textarea.form-control{ rows: 13, id: 'newThread', name: 'content'}
+          %input.button.btn.btn-primary{type:'submit', value: 'Submit Thread'}
+      - elsif @type == 3
+        %form.form.form-horizontal{ role: 'form', action:"/view/#{@this_contract}/new_topic", method: 'post'}
+          .form-group
+            %label{ for: 'newTopic' } New Topic
+            %textarea.form-control{ rows: 1, id: 'newTopic', name: 'content'}
+          %input.button.btn.btn-primary{type:'submit', value: 'Submit Topic'}
+
+.row
+  #modstep.clearfix.col-md-offset-1
+    - if @moderate_this == 'flaggedlist'
+      %a.btn.btn-default{ href:'/promotedlist' } Promoted List
+      %a.btn.btn-default{ href: '/view' } Back to Discussion
+    - elsif @moderate_this == 'promotedlist'
+      %a.btn.btn-default{ href:'/flaggedlist' } Flag List
+      %a.btn.btn-default{ href: '/view' } Back to Discussion

@@ -4,15 +4,15 @@
 	(def 'DOUG 0x9c0182658c9d57928b06d3ee20bb2b619a9cbf7b)
 
 	(def 'target () (calldataload 0x0))
-	(def 'crepsub () (calldataload 0x20)) 
-	(def 'crepsub () (calldataload 0x40)) 
-	(def 'cstrikes () (calldataload 0x60)) 
-	(def 'mstrikes () (calldataload 0x80)) 
+	(def 'crepsub () (calldataload 0x20))
+	(def 'crepsub () (calldataload 0x40))
+	(def 'cstrikes () (calldataload 0x60))
+	(def 'mstrikes () (calldataload 0x80))
 	(def 'rmmembership () (calldataload 0xA0)) ;binary 1= remove membership
 	(def 'REP 0x1)
 	(def 'MODREP 0x2)
 
-	(return 0 (lll 
+	(return 0 (lll
 		{
 			[0x0]"APcheck"
 			[0x20](caller)
@@ -66,11 +66,13 @@
 			(call (gass) @@MODREP 0 0x0 0x60 0x0 0x0)
 
 			(when (= (rmmembership) 1)
-				[0x0]"rmmem"
-				[0x20](target)
-				(call (gass) @@REP 0 0x0 0x40 0x0 0x0)
-				(call (gass) @@MODREP 0 0x0 0x40 0x0 0x0)
-			)
+				{
+          [0x0]"rmmem"
+          [0x20](target)
+          (call (gass) @@REP 0 0x0 0x40 0x0 0x0)
+          (call (gass) @@MODREP 0 0x0 0x40 0x0 0x0)
+				}
+      )
 		}
 	0 ))
 }

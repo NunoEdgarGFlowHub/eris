@@ -45,18 +45,30 @@
           .modal-content
             .modal-header
               %button{ type: "button", class: "close", data: { dismiss: "modal" } } &times;
-              %h4.modal-title Current Doug
+              %h4.modal-title Current Community
             .modal-body
-              %p= $doug
-              %form.form.form-horizontal{ role: 'form', action:"/set_doug", method: 'post'}
-                .form-group
-                  %label{ for: 'newDoug' } New Doug
-                  %input.form-control{ id: 'newDoug', name: 'newDoug'}
-                %input.button.btn.btn-info{ type:'submit', value: 'Switch Communities' }
-                %input.button.btn.btn-primary{ type: 'submit', value: 'Request to Join this Community', name: 'join_and_subscribe' }
+              %p.pull-left= $doug
+              - if @watched.include? $doug
+                %form.pull-right{ action:"../view/#{$doug}/unsubscribe", method: 'post'}
+                  %input.button.btn.btn-warning{type:'submit', value: 'Unsubscribe to This Community'}
+              - else
+                %form.pull-right{ action:"../view/#{$doug}/subscribe", method: 'post'}
+                  %input.button.btn.btn-success{type:'submit', value: 'Subscribe to This Community'}
+              .clearfix
               %hr
-              %form{ action:"/deployDoug", method: 'post'}
-                %input.button.btn.btn-success{type:'submit', value: 'Deploy a New Community (be patient, this will take some time)'}
+              .row
+                .col-md-10.col-md-offset-1
+                  %form.form.form-horizontal{ role: 'form', action:"/set_doug", method: 'post'}
+                    .form-group
+                      %label{ for: 'newDoug' } New Community
+                      %input.form-control{ id: 'newDoug', name: 'newDoug'}
+                    .text-center
+                      %input.button.btn.btn-info{ type:'submit', value: 'Switch Communities' }
+                      %input.button.btn.btn-primary{ type: 'submit', value: 'Request to Join this Community', name: 'join_and_subscribe' }
+              %hr
+              .text-center
+                %form{ action:"/deployDoug", method: 'post'}
+                  %input.button.btn.btn-success{type:'submit', value: 'Deploy a New Community (be patient, this will take some time)'}
       .row
         %br
       =yield

@@ -7,13 +7,15 @@ set :views, File.join(File.dirname(__FILE__), 'views')
 before do
   print "[ERIS::#{Time.now.strftime( "%F %T" )}] Params Recieved >>\t" + params.inspect + "\n"
   print "[ERIS::#{Time.now.strftime( "%F %T" )}] Request >>\t\t" + request.body.read + "\n"
+  @watched       = get_watched_contracts
+  @ignored       = get_ignored_contracts
 end
 
 get '/' do
   if $doug
     redirect to("/view")
   else
-    p "There is NO DOUG. Please Add a DOUG in the My DAO Button."
+    p "There is NO DOUG. Please Deploy a DOUG in the My DAO Button."
     redirect to('/view/0x')
   end
 end
@@ -23,36 +25,46 @@ get '/view' do
     swarum = get_dougs_storage 'swarum'
     redirect to("/view/#{swarum}")
   else
-    p "There is NO DOUG. Please Add a DOUG in the My DAO Button."
+    p "There is NO DOUG. Please Deploy a DOUG in the My DAO Button."
     redirect to('/view/0x')
   end
 end
 
-get '/flaggedlist' do
-  @moderate_this = 'flaggedlist'
-  flaggedlist    = get_dougs_storage 'flaggedlist'
-  redirect to("/view/#{flaggedlist}")
-end
-
-get '/promotedlist' do
-  @moderate_this = 'promotedlist'
-  promotedlist   = get_dougs_storage 'promotedlist'
-  redirect to("/view/#{promotedlist}")
-end
-
-get '/issueslist' do
-  #todo
-end
-
 get '/view/:contract' do
-  @this_contract = params[:contract]
-  @this_contract = address_guard @this_contract
+  @this_contract = address_guard params[:contract]
   @contents      = C3D::Assemble.new(@this_contract).content
   @lineage       = find_the_peak @this_contract
   @type          = contract_type @this_contract, @contents, @lineage
   assemble_content_votes
   haml :display_tree
 end
+
+get '/flaggedlist' do
+  @moderate_this = 'flaggedlist'
+  @this_contract = address_guard get_dougs_storage @moderate_this
+  @contents      = C3D::Assemble.new(@this_contract).content
+  @lineage       = find_the_peak @this_contract
+  @type          = contract_type @this_contract, @contents, @lineage
+  assemble_content_votes
+  haml :display_tree
+end
+
+get '/promotedlist' do
+  @moderate_this = 'promotedlist'
+  @this_contract = address_guard get_dougs_storage @moderate_this
+  @contents      = C3D::Assemble.new(@this_contract, true).content
+  @lineage       = find_the_peak @this_contract
+  @type          = contract_type @this_contract, @contents, @lineage
+  assemble_content_votes
+  haml :display_tree
+end
+
+get '/issueslist' do
+  #todo
+  haml :wip
+end
+
+## These methods can be abstracted
 
 post '/view/:contract/new_topic' do
   topic = CreateTopic.new params[:content], get_dougs_storage('BLWCTopic'), params[:contract]
@@ -162,19 +174,41 @@ post '/moderate/:contract/blacklist' do
 end
 
 post '/vote/:contract/endorse' do
-  request.body.rewind
-  request_from_ui = JSON.parse request.body.read
+  # request.body.rewind
+  # request_from_ui = JSON.parse request.body.read
   # result = C3D::Settings.set_settings request_from_ui
-  content_type :json
-  response = { 'success' => result }.to_json
+  # content_type :json
+  # response = { 'success' => result }.to_json
 end
 
 post '/vote/:contract/vote' do
-  request.body.rewind
-  request_from_ui = JSON.parse request.body.read
+  # request.body.rewind
+  # request_from_ui = JSON.parse request.body.read
   # result = C3D::Settings.set_settings request_from_ui
-  content_type :json
-  response = { 'success' => result }.to_json
+  # content_type :json
+  # response = { 'success' => result }.to_json
+end
+
+## These methods cannot be abstracted.
+
+post '/view/:contract/subscribe' do
+  C3D::EyeOfZorax.subscribe params[:contract]
+  redirect to("/view/#{params[:contract]}")
+end
+
+post '/view/:contract/unsubscribe' do
+  C3D::EyeOfZorax.unsubscribe params[:contract]
+  redirect to("/view/#{params[:contract]}")
+end
+
+post '/view/:contract/ignore' do
+  C3D::EyeOfZorax.ignore params[:contract]
+  redirect to("/view/#{params[:contract]}")
+end
+
+post '/view/:contract/unignore' do
+  C3D::EyeOfZorax.unignore params[:contract]
+  redirect to("/view/#{params[:contract]}")
 end
 
 get '/configure' do
@@ -202,5 +236,12 @@ end
 post '/deployDoug' do
   EPM::Deploy.new(ERIS_REPO).deploy_package
   $doug = get_latest_doug
+  redirect to '/'
+end
+
+post '/resetChain' do
+  stop_eth
+  kank_chain
+  start_eth
   redirect to '/'
 end

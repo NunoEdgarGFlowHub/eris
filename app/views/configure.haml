@@ -77,8 +77,17 @@
     .col-sm-10
       %input.form-control{ name: 'primaryAccountPriv', value: "#{@settings['primary_account_key']}" }
   .form-group
+    %label.col-sm-2.control-label{ for: 'gasPrice' } Gas Price
+    .col-sm-10
+      %input.form-control{ name: 'gasPrice', value: "#{@settings['gas_price']}" }
+  .form-group
     .col-sm-12
       .checkbox
         %input{ name: 'epmAndC3d', type: 'checkbox', value: nil }
           %b Update Your EPM Settings Also?
   %input.button.btn.btn-primary{type:'submit', value: 'Submit Configuration'}
+  %a.btn.btn-default{ href:'/view' } Cancel
+%form{ action:"../resetChain", method: 'post'}
+  %input.button.btn.btn-danger{type:'submit', value: 'Reset Blockchain'}
+.clearfix
+%h4.text-center Please be patient as these commands will take a few seconds to operate.

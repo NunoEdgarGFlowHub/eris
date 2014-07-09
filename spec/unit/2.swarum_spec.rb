@@ -134,6 +134,13 @@ describe "Publishing Content from c3D to Ethereum" do
     expect( bp.added ).to be_truthy
   end
 
+  it "should change the status of blacklisted posts." do
+    print "\n\nChecking Blacklisted Post Status."
+    status_bp = Celluloid::Actor[:eth].get_storage_at @multiple_post_ids[2], '0x21'
+    print "\n"
+    expect( status_bp ).to eq('0x03')
+  end
+
   it "should be able to move threads between topics." do
     print "\n\nMoving a Thread between Topics.\n\n"
     mv      = MoveThread.new @thread.thread_id, get_another_topic, @m_thr_bl

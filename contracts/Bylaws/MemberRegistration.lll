@@ -20,14 +20,14 @@
 			[[REP]]@0x40
 
 			[0x0]"makemem"
-			[0x20](target)
+			[0x20](caller)
 			(call (gass) @@REP 0 0x0 0x40 0x0 0x0)
 
 			[0x0]"makemem"
-			[0x20](target)
+			[0x20](caller)
 			(call (gass) @@MODREP 0 0x0 0x40 0x0 0x0)
 
-			;Get user info and check they have required rep and no more then 3 strikes
+			;Get user info and check they have not already registered
 			[0x0]"get"
 			[0x20](caller)
 			[0x40]0
@@ -39,7 +39,7 @@
 			[0x40](* 2 BLCTopicrep)
 			(call (gass) @@REP 0 0x0 0x60 0x0 0x0)
 
-			(call (gass) (CALLER) 10000ether 0 0 0 0)
+			(call (gass) (CALLER) 1000ether 0 0 0 0)
 		}
 	0 ))
 }

@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/project-douglas/eris.png?label=ready&title=Ready)](https://waffle.io/project-douglas/eris)
 ## Introduction
 
 `Eris` is a platform on which decentralized applications may be built. At its core, what Eris seeks to do is to revisit the current state of how consumer applications are developed. Eris was designed as an attempt to provide a framework for development of applications which leverage web technologies, but *without servers*. This is the fundamental, driving design imperative of what Eris is seeking to achieve. We are building a framework which allows developers to build serverless integrated applications using technologies they are already familiar with.
@@ -53,6 +54,36 @@ exit
 ```
 
 Then follow the post install instructions below.
+
+### Docker Install Method (No-trust)
+
+Install [Docker](https://docker.io) from their docs for [Ubuntu](https://docs.docker.com/installation/ubuntulinux/) and [OS X](https://docs.docker.com/installation/mac/).
+
+OSX users should run following script before running eris project
+```
+curl -O https://raw.githubusercontent.com/project-douglas/eris/master/osx-port-forward.sh && bash osx-port-forward.sh
+```
+
+You can use pre-built images from the [Docker Hub](https://hub.docker.com/):
+```
+docker pull caktux/eris
+docker run -i -p 5000:5000 -p 30302:30302 -t caktux/eris
+```
+
+Or get Eris and build your own container:
+```
+git clone https://github.com/project-douglas/eris.git
+cd eris/docker
+docker build -t eris
+```
+
+Run your container:
+```
+docker run -i -p 5000:5000 -p 30302:30302 -p 51413:51413 -t eris
+```
+
+You can edit configurations, address and key in `c3d-config.json` and rebuild your container.
+
 
 ### Harder Install Method (DIY)
 

@@ -22,28 +22,16 @@ C3D::ConnectTorrent.supervise_as :puller, {
     password: ENV['TORRENT_PASS'],
     url:      ENV['TORRENT_RPC'] }
 C3D::ConnectEth.supervise_as :eth, :cpp
+
 C3D::Utility.save_key
 $key = Celluloid::Actor[:eth].get_key
 
-def get_latest_doug
-  log_file = File.join(ENV['HOME'], '.epm', 'deployed-log.csv')
-  begin
-    log  = File.read log_file
-    doug = log.split("\n").map{|l| l.split(',')}.select{|l| l[0] == ("Doug" || "DOUG" || "doug")}[-1][-1]
-  rescue
-    doug = '0x'
-  end
-  doug_check = Celluloid::Actor[:eth].get_storage_at doug, '0x10'
-  if doug_check != '0x'
-    return doug
-  else
-    return nil
-  end
+C3D::Utility.save_address
+$doug = C3D::Utility.get_latest_doug
+
+if ENV['ETH_REMOTE'] == '173.246.105.207'
+  ENV['GAS_PRICE'] = '0'
 end
-
-$doug = get_latest_doug
-
-# C3D.start
 
 map '/assets' do
   environment = Sprockets::Environment.new
