@@ -98,7 +98,7 @@
 			[0x40](targetpost)
 			[0x100]0
 			(call (gass) @@PL 0 0x0 0x100 0x100 0x20)
-;			(unless @0x100 (STOP)) ;Addlink must have been sucessful
+			(unless @0x100 (STOP)) ;Addlink must have been sucessful
 
 			[0x0]"rmlink"
 			[0x20](targetpost)
