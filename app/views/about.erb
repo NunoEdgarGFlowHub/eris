@@ -1,0 +1,105 @@
+<div class=container row col-lg-12>
+<h2 id="eris-by-project-douglas">Eris | By Project Douglas</h2>
+<h3 id="introduction">Introduction</h3>
+<p>Eris is a platform for building decentralized applications. In other words, Eris lets you develop web-based applications which incorporate data storage, <strong>but does so without servers</strong>.    Think of it as a "Reddit without servers."</p>
+<p>As most readers will know, modern web applications are typically built using an MVC architecture comprised of </p>
+<ul>
+<li><p><strong>Model(s)</strong>.   A database (and language-specific wrapper) provides the model component for data storage</p>
+</li>
+<li><p><strong>Controller(s)</strong>.  A different set of language specific modules are used as the controller to move data between the view and the model</p>
+</li>
+<li><p><strong>Views</strong>.   Html, css, and javascript provide the view components -- what the user sees.</p>
+</li>
+</ul>
+<p>This basic structure was our starting point.   While MVC is great for creating web-based applications it has some serious flaws, including cost, security and privacy risks.  (We discuss this more below).  But web-browsers are everywhere and the MVC approach to web application design has many benefits.  So we asked how we could keep the good parts of MVC and address central failure points related to centralized server based data storage. </p>
+<p><strong>Eris is our answer.</strong></p>
+<p>Eris uses two primary components to provide model and controller functionality. One operates on a blockchain; the other operates in browser based clients which users run on their computers or (preferably) in virtual machines or docker images.</p>
+<p>Eris' blockchain functionality is comprised of a series of (1) databases which provide part of a traditional model functionality and (2) actors, which provide part of a traditional controller functionality and in Eris are called ByLaws. </p>
+<p>Eris' offchain functionality is comprised of (1) a cache of peer-to-peer distributed file blobs (which provide a portion of the traditional model functionality) and (2) actors (which are preformulated API calls that the view component can easily call). </p>
+<p>Finally,Eris' view  is no different than any other view component of a modern web application, and is comprised of HTML, CSS and Javascript.</p>
+<h3 id="why-bother-">Why Bother?</h3>
+<p>There are many good reasons to build distributed applications:</p>
+<ul>
+<li><p><strong>Cost</strong>.    It is cheaper for application developers because the users will provide the content distribution network. Because Eris is built to run on localhost or in a docker image or vm on a user's computer (or on a self-owned cloud droplet) there are limited server costs.</p></li>
+<li><p><strong>Security</strong>.  Servers are a central failure point -- they break all the time and are vulnerable to DDos attacks and innumerable other attack vectors. </li>
+<li><p><strong>Privacy</strong>.  Users are increasingly skeptical of centralized data silos which store massive amounts of personal information.</li>
+<p>Eris provides solutions for each of these issues.</p>
+</ul>
+<h3 id="right-so-how-does-this-work-">Right, So How Does This Work?</h3>
+<p>A set of smart contracts are designed to run (currently at least) on an Ethereum blockchain. These contracts are split into two types.</p>
+<ol>
+<li><p>Database contracts store information (they do some other things, but information storage is their major function).  They perform functions analaogous to relational database like mysql or postgresql.</p>
+</li>
+<li><p>ByLaw contracts provide blockchain controller functionality. The Eris database contracts are hardened against attacks by responding (1) only to ByLaws which (2) make specified API calls to the databases and (3) if the ByLaws or other requester has permission to take the specified action.</p>
+</li>
+</ol>
+<p>For example:</p>
+<p>[EXAMPLE TO FOLLOW]</p>
+<p>c3D ('contract controlled content dissemination') is an off-chain client that delivers content.  It's like a peer to peer CDN.</p>  
+
+<p>c3D distributes and disseminates content based on the terms of the database contracts.  It wraps content blobs into files, places them into a torrent client, and then submits the minimum required information to the Ethereum system of contracts.  When other clients read the Ethereum blockchain and see additions to contracts to which they are subscribed, those clients will then decode the additional information. If another client does not have the file blobs of a contract to which it subscribes it will add those to the torrent client for retrieval. </p>
+
+<p>The current client was built in Ruby but is easily portable to other languages.</p>
+<p>Finally this package is wrapped up in a small API and view component.  Together this allows us to build a Reddit without servers.  As of this v 0.1 release what Eris fundamentally is.</p>
+<h3 id="cool-how-do-i-play-with-it-">Cool. How Do I Play With It?</h3>
+<p>Easy Install Method (Requires Trust)</p>
+<p>To run the easy install method, first download and install Virtual Box.</p>
+<p>Then, throw this magnet link in your torrent client: magnet:?xt=urn:btih:05c402749fb155c9b41fd386791ec187d237e001&amp;dn=Project%20Douglas.ova</p>
+<p>When the torrent finishes (please seed!), then import the application into your virtual box.</p>
+<p>After that you can SSH into the virtual box using:</p>
+<p>ssh -p 3022 pd@127.0.0.1
+Then enter the password of projectdouglas. After that then you will do the following commands:</p>
+<p>cd eris
+foreman start &amp;disown
+exit
+Then follow the post install instructions below.</p>
+<p>Docker Install Method (No-trust)</p>
+<p>Install Docker from their docs for Ubuntu and OS X.</p>
+<p>OSX users should run following script before running eris project</p>
+<p>curl -O <a href="https://raw.githubusercontent.com/project-douglas/eris/master/osx-port-forward.sh">https://raw.githubusercontent.com/project-douglas/eris/master/osx-port-forward.sh</a> &amp;&amp; bash osx-port-forward.sh
+You can use pre-built images from the Docker Hub:</p>
+<p>docker pull caktux/eris
+docker run -i -p 5000:5000 -p 30302:30302 -t caktux/eris
+Or get Eris and build your own container:</p>
+<p>git clone <a href="https://github.com/project-douglas/eris.git">https://github.com/project-douglas/eris.git</a>
+cd eris/docker
+docker build -t eris
+Run your container:</p>
+<p>docker run -i -p 5000:5000 -p 30302:30302 -p 51413:51413 -t eris
+You can edit configurations, address and key in c3d-config.json and rebuild your container.</p>
+<p>Harder Install Method (DIY)</p>
+<p>As a precursor, you will need Ruby. On linux platforms, you can simply install ruby 2.0 from your friendly package manager. On OSX it comes preinstalled so there's nothing to install.</p>
+<p>First you will need an ethereum client. Eris has been tested on the cpp client, but there is no reason to think that it will not work on the go client. You will, however, need the LLL compiler if you wish to deploy your own version of Eris. These clients can be found:</p>
+<p>Ethereum Go Client
+Ethereum CPP Client
+Second, you will need a torrent client. Eris has been tested using transmission-daemon and is known to work well. If you were to use another torrent client, you would need to modify the c3D component of Eris before using. Transmission daemon can be installed (depending on your platform) using:</p>
+<p>sudo apt-get install transmission-daemon
+brew install transmission
+Third, you will need to clone this repo and run the install sequence:</p>
+<p>git clone <a href="https://github.com/project-douglas/eris.git">https://github.com/project-douglas/eris.git</a>
+bundle install
+One last thing, which is predominantly for linux. When apt-get installs transmission it starts up the daemon. C3D will need to run the daemon manually with the config it puts into ~/.epm/settings.json (that is the transmission config file). So you will have to turn it off the first time with sudo service transmission-daemon stop and if you want to permanently turn it off (if you want) with sudo update-rc.d -f transmission-daemon remove.</p>
+<p>After that you are ready to go. Start the server with foreman start and you are ready to interact with your own DAO.</p>
+<p>Post Install
+Once you have foreman start running without errors then in your browser go to: <a href="http://localhost:5000">http://localhost:5000</a> (or... if you are using the Easy Install Method: <a href="http://localhost:5005">http://localhost:5005</a> ). Once you are there you will see something like this:</p>
+<p>Eris No DOUG 1</p>
+<p>Click the MY DAO Button and you will see something like this:</p>
+<p>Eris No DOUG 2</p>
+<p>Enter a DOUG address and you are all set.</p>
+<p>In the very near future we will have a Gain Membership with this DAO button but we currently are still building that method</p>
+<p>But Wait, I Don't Have a DAO.</p>
+<p>Funny you should say that, because we have that part also under control. Before starting the server with the above command, you will want to Deploy your very own DAO. Eris depends on the EPM gem (Ethereum Package Manager). EPM is built to provide a very simple interface for deploying series of contracts. So just type bundle exec epm deploy ./contracts/ERIS.package-definition and your DOUG will deploy. If you run a headed client (which is advised -- just use a different port in your config file) then you can watch your very own DAO deploy before your eyes.</p>
+<p>Note Aleth does not work with JSON RPC which EPM relies upon to deploy so if you wish to use the CPP client then you will need to run both a headed and headless client. Just make sure to change in your ~/.epm/epm-rpc.json and ~/.epm/c3d-config.json config files the directory and peer ports which the headless server runs on.</p>
+<p>Once you have a DAO, then run foreman start. After that in any web browser go to localhost:5000 and enjoy playing with your DAO!!!!</p>
+<p>Some Commonly Encountered Problems</p>
+<p>As of this writing you will not be able to run Eris on the main Ethereum Test Net. The way the Ethereum Virtual Machine has been designed allows for a dynamic amount of gas to be used within each block. Slowly this expands and reduces as prior blocks are heavily used or are not used. Because the current test net is mostly being used (right now) for working on the mining algorithm there are many unused blocks. The result of this is that the gas limit per block has been reduced so low that DOUG the very first contract, and almost all of the rest of the contracts required to run Eris cannot be deployed. As of this writing, DOUG needs about 14000 gas to deploy and the current minimum gas amount per block is around 10000 so even using the entire gas in a block will not allow you to deploy one contract per block.</p>
+<p>Solution 1. This is a known issue for the Ethereum team, and we are sure they have a fix in mind so one solution is to wait until that is fixed.</p>
+<p>Solution 2. If you want, you can use your own test net which will not present you with such an error. Alternatively, you can build our reference client or simply join the PD testnet on 173.246.105.207:30303. Since we do a lot of deploys and transactions per block you should not face that error on our net. Be advised our test net gets reverted a lot. So be wary.
+Contributing
+Fork. Hack. Pull Request.</p>
+<p>License
+Decentralised Autonomous Organisations, or DAOs, are new and legally untested platforms. Their use may give rise to criminal liability in certain jurisdictions where, e.g., data encryption is banned. In more liberal jurisdictions, the use of such software in applications which are tightly regulated by consumer protection legislation - for example, platforms aimed at offerings of debt, equity, or other forms of investment contract, consumer credit, or money transfer - may apply. Finally, structuring the relationship between an Eris userbase and an entity which deploys the Eris platform will give rise to significant liabilities on the part of the platform operator/owner and its directors and may expose its userbase to economic or other types of harm.</p>
+<p>It is imperative that prior to deploying the software proper and thorough independent legal advice and specialist coding advice is obtained from qualified professionals.</p>
+<p>Eris is provided "as is", without warranty or representation of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall Project Ðouglas and each and any member of the Project Ðouglas Dev Team be liable to you or any other person for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.</p>
+<p>See LICENSE.md.</p>
+<p>In other words, don't be a jerk.</p>
