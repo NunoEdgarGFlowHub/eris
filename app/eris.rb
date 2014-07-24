@@ -225,7 +225,7 @@ post '/set_doug' do
   if params[:join_and_subscribe]
     $doug = params[:newDoug]
     registration_bylaw = get_dougs_storage 'BLWReg'
-    MemberRegistration.new registration_bylaw
+    Celluloid::Actor[:eth].transact registration_bylaw, []
     redirect to '/'
   else
     $doug = params[:newDoug]

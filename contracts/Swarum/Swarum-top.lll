@@ -28,7 +28,7 @@
 	(def 'UI () (calldataload 0xE0))
 	;(Init)
 	(def 'contentblob () (calldataload 0x20))
-	(def 'initmodel () (calldataload 0x40))
+	(def 'initmodel () 0x7580b4694435c555e85d2378d3d140e0e8f7bf513d5e4a03b3153a216658ea93)
 	(def 'initUI () (calldataload 0x60))
 	(def 'initowner () (calldataload 0x80))
 	;(Bind)

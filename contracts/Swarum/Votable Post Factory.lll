@@ -34,7 +34,7 @@
 	(def 'voter () (calldataload 0x20))
 	;(Init)
 	(def 'contentblob () (calldataload 0x20))
-	(def 'initmodel () (calldataload 0x40))
+	(def 'initmodel () 0xb3a73aa736e625882784ea1ed2196969a90bcfbc45a10b9d068b2ce100436623)
 	(def 'initUI () (calldataload 0x60))
 	(def 'initowner () (calldataload 0x80))
 	(def 'initfirstind () (calldataload 0xA0))
