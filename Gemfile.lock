@@ -1,6 +1,7 @@
 GIT
   remote: https://github.com/project-douglas/c3d.git
-  revision: c6d7dc387b4aef511af058448102901952f7afb9
+  revision: 46dfcf02bbef429cb0ad06618d1b070f5e96bce8
+  branch: newdatamodel
   specs:
     c3d (0.5.7)
       bencode (~> 0.8)

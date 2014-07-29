@@ -1,37 +1,27 @@
 {
   "actions": {
-    "upvotePost": {
+    "postToThread": {
       "precall": [
           "$this:0x19",
-          "$doug:BLWVoteUpDown"
+          "$doug:BLWPostTT"
         ],
       "call": [
           "$precall[1]",
-          "upvote",
-          "$this"
+          "$this",
+          "$blob",
+          "",
+          "",
+          "$blob",
+          "",
+          ""
         ],
       "postcall": [
-          "$this:0x19"
+          "$this:0x19",
+          "$this:$postcall[0]",
+          "$this:$postcall[0]+5"
         ],
-      "success": "$postcall[0] > $precall[0]",
-      "result":"$postcall[0]"
-    },
-
-    "downvotePost": {
-      "precall": [
-          "$this:0x20",
-          "$doug:BLWVoteUpDown"
-        ],
-      "call": [
-          "$precall[1]",
-          "downvote",
-          "$this"
-        ],
-      "postcall": [
-          "$this:0x20"
-        ],
-      "success": "$postcall[0] > $precall[0]",
-      "result": "$postcall[0]"
+      "success": "$postcall[0] != $precall[0]",
+      "result":"$postcall[2]"
     },
 
     "flagPost": {
@@ -119,8 +109,6 @@
   },
 
   "data": {
-    "upvotes":"$this:0x19",
-    "downvotes":"$this:0x20",
     "status":"$this:0x21"
   }
 }
