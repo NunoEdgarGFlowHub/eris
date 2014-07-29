@@ -20,6 +20,12 @@ get '/' do
   end
 end
 
+#!added route for help page located at help.erb
+
+get '/help' do
+  erb :help
+end
+
 get '/view' do
   if $doug
     swarum = get_dougs_storage 'swarum'

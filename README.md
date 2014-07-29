@@ -82,7 +82,7 @@ Or get Eris and build your own container:
 ```bash
 git clone https://github.com/project-douglas/eris.git
 cd eris/docker
-docker build -t eris
+docker build -t eris .
 ```
 
 Run your container:
