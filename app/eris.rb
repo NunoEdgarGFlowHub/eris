@@ -65,132 +65,84 @@ get '/issueslist' do
 end
 
 ## These methods can be abstracted
-
 post '/view/:contract/new_topic' do
-  topic = CreateTopic.new params[:content], get_dougs_storage('BLWCTopic'), params[:contract]
-  if topic.topic_id != ('0x' || nil )
-    result = true
-  else
-    result = false
-  end
+  action  = C3D::ActionModel.new params[:contract]
+  result  = action.perform_action 'createTopic', params[:content]
   redirect to("/view/#{params[:contract]}")
 end
 
 post '/view/:contract/new_thread' do
-  thread = CreateThread.new params[:content], get_dougs_storage('BLWCThread'), params[:contract]
-  if thread.thread_id != ('0x' || nil )
-    result = true
-  else
-    result = false
-  end
+  action  = C3D::ActionModel.new params[:contract]
+  result  = action.perform_action 'createThread', params[:content]
   redirect to("/view/#{params[:contract]}")
 end
 
 post '/view/:contract/new_post' do
-  post = PostToThread.new params[:content], get_dougs_storage('BLWPostTT'), params[:contract]
-  if post.post_id != ('0x' || nil )
-    result = true
-  else
-    result = false
-  end
+  action  = C3D::ActionModel.new params[:contract]
+  result  = action.perform_action 'postToThread', params[:content]
   redirect to("/view/#{params[:contract]}")
 end
 
 post '/view/:contract/upvote' do
-  post = VotePost.new params[:contract], 'upvote', get_dougs_storage('BLWVoteUpDown')
-  if post.voted == true
-    result = true
-  else
-    result = false
-  end
-  content_type :json
+  action = C3D::ActionModel.new params[:contract]
+  result = action.perform_action 'upvotePost'
   redirect to("/view/#{params[:contract]}")
 end
 
 post '/view/:contract/downvote' do
-  post = VotePost.new params[:contract], 'downvote', get_dougs_storage('BLWVoteUpDown')
-  if post.voted == true
-    result = true
-  else
-    result = false
-  end
-  content_type :json
+  action = C3D::ActionModel.new params[:contract]
+  result = action.perform_action 'downvotePost'
   redirect to("/view/#{params[:contract]}")
 end
 
 post '/moderate/:contract/flag' do
-  post = FlagPost.new params[:contract], get_dougs_storage('BLWFlagPost'), get_dougs_storage('flaggedlist')
-  if post.added == true
-    result = true
-  else
-    result = false
-  end
-  content_type :json
+  action = C3D::ActionModel.new params[:contract]
+  result = action.perform_action 'flagPost'
   redirect to("/flaggedlist")
 end
 
 post '/moderate/:contract/remove_flag' do
-  post = RemoveFlag.new params[:contract], get_dougs_storage('BLWRemoveFlag'), get_dougs_storage('flaggedlist')
-  if post.removed == true
-    result = true
-  else
-    result = false
-  end
-  content_type :json
+  action = C3D::ActionModel.new params[:contract]
+  result = action.perform_action 'removeFlag'
   redirect to("/flaggedlist")
 end
 
 post '/moderate/:contract/promote' do
-  post = PromotePost.new params[:contract], get_dougs_storage('BLWPromotePost'), get_dougs_storage('promotedlist')
-  if post.added == true
-    result = true
-  else
-    result = false
-  end
-  content_type :json
+  action = C3D::ActionModel.new params[:contract]
+  result = action.perform_action 'promotePost'
   redirect to("/promotedlist")
 end
 
 post '/moderate/:contract/remove_promotion' do
-  post = RemovePromoted.new params[:contract], get_dougs_storage('BLWRemovePromoted'), get_dougs_storage('promotedlist')
-  if post.removed == true
-    result = true
-  else
-    result = false
-  end
-  content_type :json
+  action = C3D::ActionModel.new params[:contract]
+  result = action.perform_action 'removePromote'
   redirect to("/promotedlist")
 end
 
 post '/moderate/:contract/blacklist' do
-  post = BlacklistPost.new params[:contract], get_dougs_storage('BLWBlacklist'), get_dougs_storage('blacklist')
-  if post.added == true
-    result = true
-  else
-    result = false
-  end
-  content_type :json
+  action = C3D::ActionModel.new params[:contract]
+  result = action.perform_action 'blacklistPost'
   redirect to("/promotedlist")
 end
 
-post '/vote/:contract/endorse' do
+# post '/vote/:contract/endorse' do
   # request.body.rewind
   # request_from_ui = JSON.parse request.body.read
   # result = C3D::Settings.set_settings request_from_ui
   # content_type :json
   # response = { 'success' => result }.to_json
-end
+# end
 
-post '/vote/:contract/vote' do
+# post '/vote/:contract/vote' do
   # request.body.rewind
   # request_from_ui = JSON.parse request.body.read
   # result = C3D::Settings.set_settings request_from_ui
   # content_type :json
   # response = { 'success' => result }.to_json
-end
+# end
 
-## These methods cannot be abstracted.
 
+## These methods cannot be abstracted. Be careful when changing these methods.
 post '/view/:contract/subscribe' do
   C3D::EyeOfZorax.subscribe params[:contract]
   redirect to("/view/#{params[:contract]}")

@@ -56,9 +56,9 @@ helpers do
     begin
       if contents.count == 1 && this_contract == contents.first.first[0]
         return 0
-      elsif lineage.count == 0
-        return 3
       elsif lineage.count == 1
+        return 3
+      elsif lineage.count == 2
         return 2
       end
     end
