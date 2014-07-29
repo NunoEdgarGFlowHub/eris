@@ -1,4 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/project-douglas/eris.png?label=ready&title=Ready)](https://waffle.io/project-douglas/eris)
+
 ## Introduction
 
 `Eris` is a platform on which decentralized applications may be built. At its core, what Eris seeks to do is to revisit the current state of how consumer applications are developed. Eris was designed as an attempt to provide a framework for development of applications which leverage web technologies, but *without servers*. This is the fundamental, driving design imperative of what Eris is seeking to achieve. We are building a framework which allows developers to build serverless integrated applications using technologies they are already familiar with.
@@ -35,7 +36,11 @@ Finally this package is wrapped up in a small API and view component. Together t
 
 To run the easy install method, first download and install Virtual Box.
 
-Then, throw this magnet link in your torrent client: magnet:?xt=urn:btih:05c402749fb155c9b41fd386791ec187d237e001&dn=Project%20Douglas.ova
+Then, throw this magnet link in your torrent client:
+
+```
+magnet:?xt=urn:btih:05c402749fb155c9b41fd386791ec187d237e001&dn=Project%20Douglas.ova
+```
 
 When the torrent finishes (please seed!), then import the application into your virtual box.
 
@@ -59,31 +64,34 @@ Then follow the post install instructions below.
 
 Install [Docker](https://docker.io) from their docs for [Ubuntu](https://docs.docker.com/installation/ubuntulinux/) and [OS X](https://docs.docker.com/installation/mac/).
 
-OSX users should run following script before running eris project
-```
+OSX users should run following script before running eris
+
+```bash
 curl -O https://raw.githubusercontent.com/project-douglas/eris/master/osx-port-forward.sh && bash osx-port-forward.sh
 ```
 
 You can use pre-built images from the [Docker Hub](https://hub.docker.com/):
-```
+
+```bash
 docker pull caktux/eris
 docker run -i -p 5000:5000 -p 30302:30302 -t caktux/eris
 ```
 
 Or get Eris and build your own container:
-```
+
+```bash
 git clone https://github.com/project-douglas/eris.git
 cd eris/docker
 docker build -t eris
 ```
 
 Run your container:
-```
+
+```bash
 docker run -i -p 5000:5000 -p 30302:30302 -p 51413:51413 -t eris
 ```
 
 You can edit configurations, address and key in `c3d-config.json` and rebuild your container.
-
 
 ### Harder Install Method (DIY)
 
@@ -104,7 +112,7 @@ Third, you will need to clone this repo and run the install sequence:
 * `git clone https://github.com/project-douglas/eris.git`
 * `bundle install`
 
-One last thing, which is predominantly for linux. When `apt-get` installs transmission it starts up the daemon. C3D will need to run the daemon manually with the config it puts into ~/.epm/settings.json (that is the transmission config file). So you will have to turn it off the first time with `sudo service transmission-daemon stop` and if you want to permanently turn it off (if you want) with `sudo update-rc.d -f transmission-daemon remove`.
+One last thing, which is predominantly for linux. When `apt-get` installs transmission it starts up the daemon. C3D will need to run the daemon manually with the config it puts into `~/.epm/settings.json` (that is the transmission config file). So you will have to either turn it off the first time with `sudo service transmission-daemon stop` or change the port it is running on so that there are no conflicts with the transmission-daemon.
 
 After that you are ready to go. Start the server with `foreman start` and you are ready to interact with your own DAO.
 
@@ -118,31 +126,21 @@ Click the MY DAO Button and you will see something like this:
 
 ![Eris No DOUG 2](https://raw.githubusercontent.com/project-douglas/eris/master/docs/Eris-NoDoug2.png)
 
-Enter a DOUG address and you are all set.
-
-In the very near future we will have a `Gain Membership with this DAO` button but we currently are still building that method
+Enter a DOUG address and you are all set. If you are requesting to join an existing DAO which you are not a member of you will click the "Request to Join Community" button
 
 ### But Wait, I Don't Have a DAO.
 
-Funny you should say that, because we have that part also under control. Before starting the server with the above command, you will want to Deploy your very own DAO. Eris depends on the `EPM` gem (Ethereum Package Manager). EPM is built to provide a very simple interface for deploying series of contracts. So just type `bundle exec epm deploy ./contracts/ERIS.package-definition` and your DOUG will deploy. If you run a headed client (which is advised -- just use a different port in your config file) then you can watch your very own DAO deploy before your eyes.
-
-**Note Aleth** does not work with JSON RPC which EPM relies upon to deploy so if you wish to use the CPP client then you will need to run both a headed and headless client. Just make sure to change in your `~/.epm/epm-rpc.json` and `~/.epm/c3d-config.json` config files the directory and peer ports which the headless server runs on.
-
-Once you have a DAO, then run `foreman start`. After that in any web browser go to localhost:5000 and enjoy playing with your DAO!!!!
+Funny you should say that, because we have that part also under control. Before starting the server with the above command, you will want to Deploy your very own DAO. When you click the My DAO button you will see an option to deploy your own community. Just click that and Eris will take care of the rest for you.
 
 ### Some Commonly Encountered Problems
 
-As of this writing you will not be able to run Eris on the main Ethereum Test Net. The way the Ethereum Virtual Machine has been designed allows for a dynamic amount of gas to be used within each block. Slowly this expands and reduces as prior blocks are heavily used or are not used. Because the current test net is mostly being used (right now) for working on the mining algorithm there are many unused blocks. The result of this is that the gas limit per block has been reduced so low that DOUG the very first contract, and almost all of the rest of the contracts required to run Eris cannot be deployed. As of this writing, DOUG needs about 14000 gas to deploy and the current minimum gas amount per block is around 10000 so even using the entire gas in a block will not allow you to deploy one contract per block.
-
-> Solution 1. This is a known issue for the Ethereum team, and we are sure they have a fix in mind so one solution is to wait until that is fixed.
-
-> Solution 2. If you want, you can use your own test net which will not present you with such an error. Alternatively, you can build our [reference client](https://github.com/project-douglas/cpp-ethereum) or simply join the PD testnet on 173.246.105.207:30303. Since we do a lot of deploys and transactions per block you should not face that error on our net. Be advised our test net gets reverted a lot. So be wary.
+**Note Aleth** does not work with JSON RPC which EPM relies upon to deploy so if you wish to use the CPP client then you will need to run both a headed and headless client. Just make sure to change in your `~/.epm/epm-rpc.json` and `~/.epm/c3d-config.json` config files the directory and peer ports which the headless server runs on.
 
 ## Contributing
 
-Fork.
-Hack.
-Pull Request.
+1. Fork.
+2. Hack.
+3. Send Pull Request.
 
 ## License
 
