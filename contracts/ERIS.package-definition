@@ -1,7 +1,7 @@
-# Package Name:       SWARUM
+# Package Name:       ERIS
 # Package Author:     Dennis McKinnon
 # Package Email:      dennis@projectdouglas.org
-# Package Repository: https://github.com/project-douglas/swarum
+# Package Repository: https://github.com/project-douglas/eris
 
 # Precursor, set some variables.
 #set:
@@ -16,12 +16,9 @@ blob:
 blob:
   Datamodels/Votable Post Factory.json => {{postdm}}
 
-
 # First We Deploy DOUG and the RepDB
 modify-deploy:
   General/DOUG-v7.lll => {{DOUG}}
-#  (def 'DOUGDATAMODEL 0x0) =>
-#  (def 'DOUGUIPOINTER 0x0) =>
 modify-deploy:
   General/repDB.lll => {{rep}}
   (def 'DOUG 0x9c0182658c9d57928b06d3ee20bb2b619a9cbf7b) => (def 'DOUG {{DOUG}})
